@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hw1
+  labels:
+    creation_method: manual
+    env: test 
+spec:
+  containers:
+  - image: alekskar/hw1web:1.0.0
+    name: hw1-web 
+    ports:
+    - containerPort: 8000
+      protocol: TCP
+    volumeMounts:
+    - name: app
+      mountPath: /app 
+      readOnly: true     
+  initContainers:
+  - name: hw1-init-web
+    image: busybox:1.31
+    command: ['sh', '-c', 'wget -O- https://tinyurl.com/otus-k8s-intro | sh']
+    volumeMounts:
+    - name: app
+      mountPath: /app
+  volumes:
+  - name: app
+    emptyDir: {}
